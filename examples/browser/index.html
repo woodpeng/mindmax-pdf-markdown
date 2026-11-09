@@ -1,0 +1,106 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>PDF → Markdown, in the browser</title>
+    <style>
+      body { font: 15px/1.6 system-ui, sans-serif; margin: 0; color: #1f2328; background: #fff; }
+      main { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
+      h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
+      p.lead { color: #57606a; margin: 0 0 24px; }
+      #drop { border: 1px dashed #b9bfc7; border-radius: 10px; padding: 36px; text-align: center; color: #57606a; }
+      #drop.over { border-color: #1a7f5a; background: #f2fbf6; }
+      label { display: inline-block; margin-top: 10px; color: #0969da; cursor: pointer; text-decoration: underline; }
+      input[type=file] { display: none; }
+      #status { margin: 18px 0 8px; color: #57606a; font-size: 13px; }
+      pre { background: #f6f8fa; border: 1px solid #d8dee4; border-radius: 10px; padding: 16px; overflow: auto; max-height: 60vh; font-size: 13px; }
+      .row { display: flex; gap: 12px; align-items: center; }
+      button { font: inherit; padding: 6px 12px; border: 1px solid #d0d7de; background: #f6f8fa; border-radius: 6px; cursor: pointer; }
+      button:disabled { opacity: .5; cursor: default; }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>PDF → Markdown, in the browser</h1>
+      <p class="lead">The file is read on this page. Nothing is uploaded. Build the package first: <code>pnpm build</code>.</p>
+
+      <div id="drop">
+        <div>Drop a PDF here</div>
+        <label for="file">or choose a file</label>
+        <input id="file" type="file" accept="application/pdf" />
+      </div>
+
+      <div id="status"></div>
+      <div class="row">
+        <button id="copy" disabled>Copy Markdown</button>
+      </div>
+      <pre id="out" hidden></pre>
+    </main>
+
+    <script type="module">
+      // pdf.js from a CDN so the example has no build step of its own; the
+      // library itself comes from the local dist/ produced by `pnpm build`.
+      const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438';
+      const pdfjs = await import(`${PDFJS}/build/pdf.mjs`);
+      pdfjs.GlobalWorkerOptions.workerSrc = `${PDFJS}/build/pdf.worker.mjs`;
+
+      const { convertPdfToMarkdown } = await import('../../dist/index.js');
+
+      const drop = document.getElementById('drop');
+      const input = document.getElementById('file');
+      const status = document.getElementById('status');
+      const out = document.getElementById('out');
+      const copy = document.getElementById('copy');
+
+      async function convert(file) {
+        status.textContent = 'Reading…';
+        out.hidden = true;
+        copy.disabled = true;
+        const doc = await pdfjs.getDocument({
+          data: new Uint8Array(await file.arrayBuffer()),
+          cMapUrl: `${PDFJS}/cmaps/`,
+          standardFontDataUrl: `${PDFJS}/standard_fonts/`,
+          wasmUrl: `${PDFJS}/wasm/`,
+        }).promise;
+        try {
+          const result = await convertPdfToMarkdown(doc, {
+            onPage: (page, total) => { status.textContent = `Converting page ${page} of ${total}…`; },
+          });
+          if (!result.ok) {
+            status.textContent = `No text layer (${result.reason}) — ${result.pageCount} pages. A scan needs OCR.`;
+            return;
+          }
+          out.textContent = result.markdown;
+          out.hidden = false;
+          copy.disabled = false;
+          const issues = result.textLayerIssues;
+          status.textContent = `${file.name} · ${result.pageCount} pages · ${result.links} links` +
+            (issues ? ` · ${issues.mathPages} pages with maths, ${issues.garbledPages} garbled` : '');
+        } finally {
+          await doc.destroy();
+        }
+      }
+
+      input.addEventListener('change', () => {
+        const file = input.files?.[0];
+        if (file) convert(file).catch((e) => { status.textContent = `Failed: ${e.message}`; });
+      });
+
+      drop.addEventListener('dragover', (e) => { e.preventDefault(); drop.classList.add('over'); });
+      drop.addEventListener('dragleave', () => drop.classList.remove('over'));
+      drop.addEventListener('drop', (e) => {
+        e.preventDefault();
+        drop.classList.remove('over');
+        const file = e.dataTransfer?.files?.[0];
+        if (file) convert(file).catch((err) => { status.textContent = `Failed: ${err.message}`; });
+      });
+
+      copy.addEventListener('click', async () => {
+        await navigator.clipboard.writeText(out.textContent ?? '');
+        copy.textContent = 'Copied';
+        setTimeout(() => { copy.textContent = 'Copy Markdown'; }, 1500);
+      });
+    </script>
+  </body>
+</html>

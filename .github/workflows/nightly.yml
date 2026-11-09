@@ -1,0 +1,26 @@
+name: Nightly corpus
+
+# The PR job runs against a cached corpus, which would hide two kinds of rot:
+# an upstream URL that stopped serving the file, and a pdf.js release that
+# changed the text layer. This job downloads everything fresh once a day.
+on:
+  schedule:
+    - cron: '17 4 * * *'
+  workflow_dispatch:
+
+jobs:
+  fresh-corpus:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm eval --fetch
+      - run: pnpm eval

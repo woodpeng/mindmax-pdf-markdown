@@ -1,0 +1,56 @@
+name: Release
+
+# Publishing is tag-driven: bump the version and CHANGELOG on main, then push
+# vX.Y.Z. The job refuses to publish if the tag and package.json disagree.
+#
+# Auth: npm Trusted Publishing (OIDC). Configure the package on npmjs.com with
+# this repository and this workflow file, and no token is needed. For the very
+# first publish, run `npm publish --access public` locally — npm only lets you
+# attach a trusted publisher to a package that already exists.
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+  id-token: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+          registry-url: https://registry.npmjs.org
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm build
+      - run: node scripts/check-size.mjs
+      - run: pnpm check:pkg
+      - run: pnpm eval --fetch
+      - run: pnpm eval
+
+      - name: Check tag matches package version
+        run: |
+          tag="${GITHUB_REF_NAME#v}"
+          version="$(node -p "require('./package.json').version")"
+          if [ "$tag" != "$version" ]; then
+            echo "tag $GITHUB_REF_NAME does not match package.json version $version"
+            exit 1
+          fi
+
+      - run: npm publish --provenance --access public
+
+      - name: Create GitHub release
+        run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes
+        env:
+          GH_TOKEN: ${{ github.token }}

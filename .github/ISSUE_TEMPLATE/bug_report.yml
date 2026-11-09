@@ -1,0 +1,77 @@
+name: Bug report
+description: Something came out wrong — a heading missed, a table shredded, text in the wrong order.
+labels: ['bug', 'needs-repro']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Before filing: the fastest way to get this fixed is a **PDF the maintainers can download**
+        and what you expected to see. If you cannot share the file, a screenshot of the page plus
+        the Markdown it produced is enough to start.
+
+        Please do not attach confidential documents. See
+        [SECURITY.md](https://github.com/woodpeng/mindmax-pdf-markdown/blob/main/SECURITY.md).
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What came out
+      description: Quote the Markdown you got, or the part that is wrong.
+      render: markdown
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What you expected instead
+      description: What does the page look like in the original? What should the Markdown be?
+    validations:
+      required: true
+
+  - type: input
+    id: source
+    attributes:
+      label: Document
+      description: A URL the maintainers can fetch, or a description of the layout. A downloadable, redistributable file is ideal.
+      placeholder: https://arxiv.org/pdf/…
+    validations:
+      required: false
+
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      multiple: true
+      options:
+        - Headings
+        - Reading order / columns
+        - Tables
+        - Lists
+        - Paragraph joins / hyphenation
+        - Links
+        - Page furniture (headers, footers, page numbers, watermarks)
+        - Scanned / empty detection
+        - Maths / garbled glyphs
+        - TypeScript types or API
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: environment
+    attributes:
+      label: Environment
+      description: Node version, or browser and version; pdfjs-dist version; package version.
+      placeholder: Node 22.11, pdfjs-dist 6.5, @mindmax/pdf-markdown 0.1.0
+    validations:
+      required: true
+
+  - type: textarea
+    id: repro
+    attributes:
+      label: Minimal reproduction
+      description: Code, or the steps in the demo, that show the problem.
+      render: typescript
+    validations:
+      required: false

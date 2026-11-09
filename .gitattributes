@@ -1,0 +1,7 @@
+* text=auto eol=lf
+
+# Snapshots and build output: do not count them as project source, and do not
+# let a diff renderer try to diff 2,000-line generated files by default.
+eval/corpus/golden/** linguist-generated=true
+dist/** linguist-generated=true
+pnpm-lock.yaml linguist-generated=true

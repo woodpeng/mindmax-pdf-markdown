@@ -1,0 +1,632 @@
+{
+  "$comment": "PDF → Markdown regression corpus. Only documents whose converted text may be redistributed are listed (CC BY / CC0 / public domain / official documents not subject to copyright). Field and assertion semantics: eval/README.md.",
+  "documents": [
+    {
+      "id": "arxiv-2201.11903-cot",
+      "url": "https://arxiv.org/pdf/2201.11903v1",
+      "sha256": "3d40493ec4bcba922882db6e29e394eb9a2449721a5eb94f05e47aee7ad46752",
+      "bytes": 1454242,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2201.11903v1 — Wei et al., Chain-of-Thought Prompting Elicits Reasoning in Large Language Models",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "tables",
+        "figures",
+        "appendix"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Abstract",
+          "1. Introduction",
+          "3.1. Experimental Setup",
+          "4. Symbolic Reasoning"
+        ],
+        "absent": [
+          "arXiv:2201.11903v1"
+        ],
+        "minLinks": 50,
+        "minTables": 5
+      }
+    },
+    {
+      "id": "arxiv-2312.00752-mamba",
+      "url": "https://arxiv.org/pdf/2312.00752v1",
+      "sha256": "83044ebdd02276f922b6d0915a344f0c501fc7c214d1b88622c33971bb149199",
+      "bytes": 1293868,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2312.00752v1 — Gu & Dao, Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "math",
+        "tables",
+        "algorithms"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Mamba: Linear-Time Sequence Modeling with Selective State Spaces",
+          "1 Introduction",
+          "2 State Space Models"
+        ],
+        "mathFlagged": true
+      },
+      "todo": {
+        "absent": [
+          "### 𝐴"
+        ],
+        "note": "B9 没有字母的大号符号（∑ 积分号、图里的变量名）被升成标题"
+      }
+    },
+    {
+      "id": "arxiv-2310.06825-mistral",
+      "url": "https://arxiv.org/pdf/2310.06825v1",
+      "sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
+      "bytes": 3749788,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2310.06825v1 — Jiang et al., Mistral 7B",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "short",
+        "tables",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Mistral 7B",
+          "2 Architectural details",
+          "5.1 System prompt to enforce guardrails",
+          "6 Conclusion"
+        ]
+      },
+      "todo": {
+        "lines": [
+          "| Parameter | Value |"
+        ],
+        "note": "B11 表格旁边的正文栏被并进表格"
+      }
+    },
+    {
+      "id": "arxiv-2302.13971-llama",
+      "url": "https://arxiv.org/pdf/2302.13971v1",
+      "sha256": "2e663675ae36ad12adb2f5a05281bac2747ecf8d23d92bedd9f937a89fee7136",
+      "bytes": 726566,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2302.13971v1 — Touvron et al., LLaMA: Open and Efficient Foundation Language Models",
+      "lang": "en",
+      "layout": [
+        "two-column",
+        "tables",
+        "footnotes"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Abstract",
+          "1 Introduction",
+          "2.1 Pre-training Data",
+          "3.1 Common Sense Reasoning"
+        ],
+        "lines": [
+          "| CommonCrawl | 67.0% | 1.10 | 3.3 TB |",
+          "| 13.0B | 5120 | 40 | 40 | 3.0e−4 | 4M | 1.0T |"
+        ],
+        "absent": [
+          "arXiv:2302.13971v1"
+        ],
+        "minTables": 5
+      },
+      "todo": {
+        "lines": [
+          "| Dataset | Sampling prop. | Epochs | Disk size |"
+        ],
+        "note": "B14 表头行被并进相邻正文段落"
+      }
+    },
+    {
+      "id": "arxiv-2212.08073-constitutional-ai",
+      "url": "https://arxiv.org/pdf/2212.08073v1",
+      "sha256": "9a456a07ad346e3372f9867d346f69f5b0f68b4c65f060aca0b8a13fa9d98e83",
+      "bytes": 2088111,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2212.08073v1 — Bai et al., Constitutional AI: Harmlessness from AI Feedback",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "long",
+        "toc",
+        "appendix",
+        "dialogue"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Constitutional AI: Harmlessness from AI Feedback",
+          "1 Introduction",
+          "1.2 The Constitutional AI Approach"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2404.14219-phi3",
+      "url": "https://arxiv.org/pdf/2404.14219v1",
+      "sha256": "54fe7b2ddc32ff3de643ca2384e0ceab39214d97191248375d6063c362350106",
+      "bytes": 2049157,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2404.14219v1 — Abdin et al., Phi-3 Technical Report",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "wide-tables",
+        "many-authors"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "1 Introduction",
+          "2 Technical Specifications",
+          "4 Safety",
+          "Phi-3 Technical Report: A Highly Capable Language Model Locally on Your Phone"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2610.40388-wide-binaries",
+      "url": "https://arxiv.org/pdf/2610.40388v2",
+      "sha256": "ad1090bbd570be9173b81038450343e08bf1a1caf24084f275d2cad853d0624e",
+      "bytes": 4793740,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2610.40388v2 — On the Proper 3D Modeling of Orbits in Wide Binary Gravity Tests (AAS journals)",
+      "lang": "en",
+      "layout": [
+        "two-column",
+        "aastex",
+        "math",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "contains": [
+          "On the Proper 3D Modeling of Orbits in Wide Binary Gravity Tests"
+        ],
+        "mathFlagged": true,
+        "maxTables": 3,
+        "headings": [
+          "2. AN EXTENDED ALGORITHM WITH A FREE SEMI-MAJOR AXIS",
+          "3. RESULTS WITH THE EXTENDED ALGORITHM AND COMPARISON WITH OTHER RESULTS",
+          "4. DISCUSSION AND CONCLUSIONS"
+        ],
+        "maxHeadings": 8
+      },
+      "todo": {
+        "headings": [
+          "1. INTRODUCTION"
+        ],
+        "absent": [
+          "[1. INTRODUCTION]("
+        ],
+        "note": "B5 超链接误包：关键词链接的矩形盖住了别处的标题（「1. INTRODUCTION」因此成了链接标题）"
+      }
+    },
+    {
+      "id": "arxiv-2610.37889-magnetization",
+      "url": "https://arxiv.org/pdf/2610.37889v1",
+      "sha256": "a57bde321ff99c4b9454e1cd5499b85d4948130dcd843b3ada48824540beaf53",
+      "bytes": 734943,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2610.37889v1 — GæniceN: a minimal model to relax magnetization states self-consistently",
+      "lang": "en",
+      "layout": [
+        "physics",
+        "math",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "contains": [
+          "I. INTRODUCTION"
+        ],
+        "headings": [
+          "I. INTRODUCTION",
+          "III. PYRAMID ASI",
+          "A. Anisotropy field"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2611.04027-ieee-ral",
+      "url": "https://arxiv.org/pdf/2611.04027v1",
+      "sha256": "3db1e67e62b16466fe4b2450132427e30f3a5d2ed31d7e69f63a4c682f8e3afd",
+      "bytes": 7354794,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2611.04027v1 — A Practical Causal Framework for Autonomous Mobile Robots (IEEE RA-L)",
+      "lang": "en",
+      "layout": [
+        "two-column",
+        "ieee",
+        "figures",
+        "tables"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "1 INTRODUCTION",
+          "3 CAUSAL ROBOT FRAMEWORK",
+          "3.1 Causality-Enhanced Decision-Making"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2611.06195-detection",
+      "url": "https://arxiv.org/pdf/2611.06195v1",
+      "sha256": "213d51094012845dfad7d5bdfef53c5db0fc17e93092d8ae60aa13896a2fff96",
+      "bytes": 10532418,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2611.06195v1 — Annotator-Free Object Detection via Foundation Model Collaboration",
+      "lang": "en",
+      "layout": [
+        "two-column",
+        "cvpr-style",
+        "tables",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Abstract",
+          "1. Introduction and Related Work",
+          "2.2. Self-labeling for proposal generation"
+        ],
+        "minTables": 3
+      }
+    },
+    {
+      "id": "arxiv-2611.00717-random-walk",
+      "url": "https://arxiv.org/pdf/2611.00717v1",
+      "sha256": "bda8e5e57e1cfc63a159b31fd0d6815b8978f0a6d3dfcb11d670e222bad6b50c",
+      "bytes": 843842,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2611.00717v1 — Cutoff for Simple Random Walk on Preferential Attachment Graphs",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "amsart",
+        "theorems",
+        "math"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "1. Introduction"
+        ],
+        "mathFlagged": true,
+        "maxTables": 25
+      },
+      "todo": {
+        "maxTables": 0,
+        "note": "B1 行间公式被当成表格（已修大半：98→22）；剩下的是带上标/行末证毕号 □ 的正文行被拆成网格"
+      }
+    },
+    {
+      "id": "arxiv-2609.17200-ai-complexity",
+      "url": "https://arxiv.org/pdf/2609.17200v1",
+      "sha256": "8663e85a50f0a52328bb796040a68c308a28bdf73dc2b49be58059b75669de20",
+      "bytes": 314784,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2609.17200v1 — Mapping AI Economic Complexity",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "short",
+        "tables"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Mapping AI Economic Complexity",
+          "1 Introduction",
+          "2.1 Country–product exports and AI-enabling goods",
+          "3 Preliminary Results"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2610.39699-ota",
+      "url": "https://arxiv.org/pdf/2610.39699v1",
+      "sha256": "72f7fdc5a47054ba25867a842af9c77b4d9387838d48d6c6568bf29a7d02b363",
+      "bytes": 6499029,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2610.39699v1 — Implementation and Validation of Mismatch-Tolerant High-Gain OTA (IEEE conference)",
+      "lang": "en",
+      "layout": [
+        "two-column",
+        "ieee",
+        "figures",
+        "tables"
+      ],
+      "expect": {
+        "result": "ok",
+        "contains": [
+          "I. INTRODUCTION"
+        ],
+        "lines": [
+          "| Technology node (nm) | 65 | 65 | 130 | 350 | 300 | 1000 |",
+          "## I. INTRODUCTION",
+          "### B. DAC"
+        ],
+        "headings": [
+          "I. INTRODUCTION",
+          "III. POST-LAYOUT SIMULATION RESULTS",
+          "Implementation and Validation of Mismatch-Tolerant High-Gain OTA with a Calibrated Negative Conductance Load"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2609.36736-speech-bci",
+      "url": "https://arxiv.org/pdf/2609.36736v1",
+      "sha256": "1d4d182d17ece0b6acdf42a9c40fce9e626ccd9ea34cc580a87302bea280db4f",
+      "bytes": 13334828,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2609.36736v1 — From Neurons to Conversation: Speech Brain-Computer Interfaces (review)",
+      "lang": "en",
+      "layout": [
+        "review",
+        "boxes",
+        "tables",
+        "long-references"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "From Neurons to Conversation: Speech Brain-Computer Interfaces",
+          "1 Introduction",
+          "1.1 Motivation and clinical need",
+          "1.4 Scope and organization of this Review"
+        ]
+      }
+    },
+    {
+      "id": "arxiv-2608.29558-math-fonts",
+      "url": "https://arxiv.org/pdf/2608.29558v2",
+      "sha256": "9e058b78b9d3c103dabeb745f0b26858495191955836c9efcae43d298f17dcb4",
+      "bytes": 379062,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2608.29558v2 — Qi & Qiao, Luo’s Spectral Large Sieve Inequality on Short Intervals (Sci. Sin. Math.)",
+      "lang": "en",
+      "layout": [
+        "single-column",
+        "math",
+        "theorems",
+        "broken-math-font-unicode"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "1. Introduction",
+          "2. Preliminaries"
+        ],
+        "mathFlagged": true
+      },
+      "todo": {
+        "absent": [
+          "#### ÿ",
+          "#### ˇ"
+        ],
+        "garbledFlagged": true,
+        "note": "B9 没有字母的大号符号（∑ 积分号、图里的变量名）被升成标题；B15 数学字体括号映射成 p/q（SL2pZq），乱码体检没报"
+      }
+    },
+    {
+      "id": "arxiv-2609.27618-bilingual",
+      "url": "https://arxiv.org/pdf/2609.27618v1",
+      "sha256": "b80f2c268e25741e99615211607296aa1d4b797ea1a2a95b55ab995ec08f7f07",
+      "bytes": 3728086,
+      "license": "CC-BY-4.0",
+      "source": "arXiv:2609.27618v1 — 中英双语稿（英文全文在前，中文原文在后）",
+      "lang": "zh+en",
+      "layout": [
+        "cjk",
+        "bilingual",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Chinese Version (Original) / 中文原文",
+          "基于热反射的微纳尺度热物性测量技术：原理、方法与前沿进展",
+          "Thermoreflectance-Based Techniques for Micro- and Nanoscale Thermophysical Property Measurements: Principles, Methods, and Recent Advances"
+        ],
+        "contains": [
+          "随着功能材料与高性能电子器件的快速发展，微纳尺度热输运行为的准确表征已成为揭示材料热输运机制"
+        ],
+        "lines": [
+          "| 方法 | 主要观测量 | 热扩散尺度调控方式与范围 | 适用对象 | 使用限制 |"
+        ]
+      },
+      "todo": {
+        "absent": [
+          "尺寸 持续缩小",
+          "\n\n。瞬态平面热源法"
+        ],
+        "note": "B8 两端对齐/字距拉开的中文被插进空格；B10 段落在句末标点前被断开（跨栏/跨图时）"
+      }
+    },
+    {
+      "id": "nist-sp800-63b",
+      "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-63b.pdf",
+      "sha256": "ccfce7510a1267933f912d023306c6e7d485f21be63d271108b61aad6139127e",
+      "bytes": 1480377,
+      "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+      "source": "NIST SP 800-63B, Digital Identity Guidelines: Authentication and Lifecycle Management (2017)",
+      "lang": "en",
+      "layout": [
+        "tagged",
+        "toc",
+        "numbered-headings",
+        "tables",
+        "running-headers"
+      ],
+      "expect": {
+        "result": "ok",
+        "lines": [
+          "# Digital Identity Guidelines"
+        ],
+        "minLinks": 30,
+        "minTables": 5
+      },
+      "todo": {
+        "headings": [
+          "5.1.1 Memorized Secrets"
+        ],
+        "absent": [
+          "###### 5 Authenticator and Verifier Requirements"
+        ],
+        "note": "B13 标题层级倒挂：封面大字号占掉 1–5 级，章标题全落到 ######，编号小节没认成标题"
+      }
+    },
+    {
+      "id": "us-constitution",
+      "url": "https://www.govinfo.gov/content/pkg/CDOC-110hdoc50/pdf/CDOC-110hdoc50.pdf",
+      "sha256": "7f29c4a79e310cc7bcee5f3fd07fb1367e463bd4530fa5d854ebdd4fd4402e57",
+      "bytes": 4020598,
+      "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+      "source": "The Constitution of the United States, pocket edition (House Document 110-50, GovInfo)",
+      "lang": "en",
+      "layout": [
+        "small-pages",
+        "articles",
+        "footnotes"
+      ],
+      "expect": {
+        "result": "ok",
+        "contains": [
+          "SECTION 1. All legislative Powers herein granted shall be vested in a Congress of the United States"
+        ],
+        "absent": [
+          "###### SECTION 1. All legislative"
+        ],
+        "maxHeadings": 60,
+        "headings": [
+          "ARTICLE [XIX.]",
+          "INDEX TO THE CONSTITUTION AND AMENDMENTS"
+        ]
+      }
+    },
+    {
+      "id": "federal-register-2023-28802",
+      "url": "https://www.govinfo.gov/content/pkg/FR-2024-01-02/pdf/2023-28802.pdf",
+      "sha256": "711b49cb298cce78e768795b8ee87100cc7d237dd52ff982959498fc527f1808",
+      "bytes": 256754,
+      "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+      "source": "Federal Register 2023-28802, Airworthiness Directives; Airbus SAS Airplanes (2024-01-02)",
+      "lang": "en",
+      "layout": [
+        "three-column",
+        "running-headers",
+        "legal"
+      ],
+      "expect": {
+        "result": "ok",
+        "minLinks": 5,
+        "maxTables": 0,
+        "headings": [
+          "Comments Invited",
+          "Background",
+          "Costs of Compliance"
+        ]
+      }
+    },
+    {
+      "id": "usgs-fs-2018-3025",
+      "url": "https://pubs.usgs.gov/fs/2018/3025/fs20183025.pdf",
+      "sha256": "b4687ef7db2f88eef575b57acc3e2f6e396d11d7b13bd240a3d11e7fd91c75d7",
+      "bytes": 1317167,
+      "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+      "source": "USGS Fact Sheet 2018-3025",
+      "lang": "en",
+      "layout": [
+        "magazine-layout",
+        "sidebars",
+        "figures"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "Key Lessons Learned So Far",
+          "River Sedimentation",
+          "References Cited"
+        ]
+      },
+      "todo": {
+        "absent": [
+          "now more the Lower Elwha Klallam Tribe"
+        ],
+        "note": "B12 杂志式排版：侧栏文字串进正文列表"
+      }
+    },
+    {
+      "id": "naca-19930091690-ocr-scan",
+      "url": "https://ntrs.nasa.gov/api/citations/19930091690/downloads/19930091690.pdf",
+      "sha256": "150601e334786c9e803accc1da1187a7ce291310f7ae7536be7ff0a2100bbbad",
+      "bytes": 10466465,
+      "license": "Public domain (US federal government work, 17 U.S.C. §105)",
+      "source": "NACA Report No. 614 (NASA NTRS 19930091690): Pressure distribution over an N.A.C.A. 23012 airfoil — scanned pages with an OCR text layer",
+      "lang": "en",
+      "layout": [
+        "scanned",
+        "ocr-text-layer",
+        "tables"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "REPORT No. 614"
+        ],
+        "contains": [
+          "Langley Memorial Aeronautical Laboratory"
+        ]
+      }
+    },
+    {
+      "id": "gov-cn-gazette-2025-35",
+      "url": "https://www.gov.cn/gongbao/2025/issue_12466/material/gwygb202535.pdf",
+      "sha256": "74d0cf48024f16f392f9af8f3b1bd1dce0fa424f44d4a4441abb8d4bd42c159c",
+      "bytes": 8001863,
+      "license": "Not subject to copyright (PRC Copyright Law art. 5: decisions, orders and other legislative, administrative or judicial documents of state organs, and their official translations)",
+      "source": "中华人民共和国国务院公报 2025 年第 35 号（整期）",
+      "lang": "zh",
+      "layout": [
+        "cjk",
+        "gazette",
+        "toc",
+        "two-column",
+        "official-documents"
+      ],
+      "expect": {
+        "result": "ok",
+        "headings": [
+          "军用土地管理条例",
+          "信用修复管理办法",
+          "运输机场运行安全管理规定",
+          "国务院关于同意萧山临江高新技术产业开发区更名为杭州钱塘高新技术产业开发区的批复"
+        ],
+        "contains": [
+          "保护和合理利用军用土地，保障国防和军队建设需要"
+        ],
+        "maxTables": 1
+      },
+      "todo": {
+        "absent": [
+          "�",
+          "!!第一条"
+        ],
+        "garbledFlagged": true,
+        "note": "B6 字体缺 ToUnicode：数字成了 �、全角空格成了 !；体检也没报乱码；B8 两端对齐/字距拉开的中文被插进空格"
+      }
+    }
+  ]
+}

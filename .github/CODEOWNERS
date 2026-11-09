@@ -1,0 +1,5 @@
+# The corpus is a licence gate as much as a test suite: adding a document needs a
+# human to check that its converted text may be redistributed.
+/eval/corpus/ @woodpeng
+
+* @woodpeng

@@ -1,0 +1,11 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+
+# Corpus PDFs are downloaded on demand (see eval/README.md)
+eval/corpus/cache/
+eval/corpus/out/
+
+*.tgz

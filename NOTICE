@@ -1,0 +1,11 @@
+MindMax PDF → Markdown
+Copyright 2026 MindMax
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+The regression corpus under eval/corpus/ contains Markdown converted from
+third-party documents that remain under their own licences. Those documents and
+their converted text are NOT covered by the Apache License; see
+eval/corpus/ATTRIBUTION.md for the per-document licence and source.
+
+"MindMax" is a trademark of MindMax. See TRADEMARKS.md.

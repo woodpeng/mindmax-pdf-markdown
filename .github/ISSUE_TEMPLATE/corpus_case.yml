@@ -1,0 +1,80 @@
+name: Corpus case (a PDF that converts badly)
+description: Submit a document as a permanent regression case — the highest-value contribution.
+labels: ['corpus']
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Every case added here becomes a test that never stops running. It does not need a fix
+        attached: filing it already improves the project, because the next change that touches
+        this area will have to keep it in mind.
+
+        **One requirement: we must be allowed to redistribute the converted text.** Accepted:
+        CC BY, CC0, public domain, and official documents excluded from copyright (for example
+        US federal works and Chinese government documents). If the document is not one of those,
+        this cannot go into the corpus — but you can still file a bug report with a screenshot.
+
+  - type: input
+    id: url
+    attributes:
+      label: Download URL
+      description: A direct link to the PDF. It must be stable — the corpus verifies sha256 on every run.
+      placeholder: https://example.org/paper.pdf
+    validations:
+      required: true
+
+  - type: dropdown
+    id: licence
+    attributes:
+      label: Licence
+      description: What permits us to redistribute the converted text?
+      options:
+        - CC BY (any version)
+        - CC0 / public domain
+        - Official government document excluded from copyright
+        - Other — I will explain below
+    validations:
+      required: true
+
+  - type: input
+    id: attribution
+    attributes:
+      label: Attribution
+      description: Title, authors and year, as they should appear in eval/corpus/ATTRIBUTION.md.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: What the conversion should show
+      description: |
+        Facts a maintainer can check against the PDF — these become `expect` assertions:
+        a heading that must exist, text that must NOT appear (a running header), a table header row.
+      placeholder: |
+        headings:
+          - "3. Method"
+        absent:
+          - "Journal of Examples, Vol. 12"
+        minTables: 2
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: What it does today
+      description: The wrong output, or which assertion fails.
+      render: markdown
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: confirm
+    attributes:
+      label: Confirmation
+      options:
+        - label: I checked the licence and it permits redistributing the converted text.
+          required: true
+        - label: The document contains no personal or confidential information.
+          required: true

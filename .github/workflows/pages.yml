@@ -1,0 +1,57 @@
+name: Pages
+
+# Publishes examples/browser/index.html as a live playground.
+#
+# Why this exists at all: the README's first promise is "drop a PDF and see
+# what it does", and until now that required cloning the repo and running
+# `pnpm build`. Most people who click through from a README will not do that.
+# The page loads both pdf.js and this package from a CDN, so there is nothing
+# to build here — the artifact is one HTML file.
+#
+# It is deliberately not a marketing site. The canonical home for the product
+# is mindmax.me; this page exists to answer "what does the output look like"
+# in three seconds and then points back.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'examples/browser/**'
+      - '.github/workflows/pages.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fail if the page still points at a local build
+        # The page must work for someone who never ran `pnpm build`. A relative
+        # import of dist/ here would 404 on Pages and look like a broken package.
+        run: |
+          if grep -q "\.\./\.\./dist" examples/browser/index.html; then
+            echo "examples/browser/index.html imports ../../dist — it must load the package from the CDN"
+            exit 1
+          fi
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: examples/browser
+
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -13,7 +13,7 @@ Zero dependencies · ~4,000 lines of TypeScript · runs in Node and in a browser
 npm install @mindmax/pdf-markdown
 ```
 
-Try it without installing: **[the live converter](https://mindmax.me/tools/pdf-to-markdown/)** runs this library in the browser, with the PDF never leaving the machine.
+Try it without installing: **[the playground](https://woodpeng.github.io/mindmax-pdf-markdown/)** takes a PDF and prints the Markdown, with nothing around it. The **[full converter](https://mindmax.me/tools/pdf-to-markdown/)** runs the same library behind an editor, with Word export.
 
 ---
 
@@ -43,6 +43,24 @@ Stated plainly, because you will find out anyway:
 - **Equations.** A PDF does not store equation structure. `x²` arrives as `x2` and fractions lose their bars. `assessPdfTextLayer` tells you which pages are affected so you can route them elsewhere.
 - **Images, bold and italic.** You get text and structure. Figures stay in the PDF and emphasis is not marked.
 - **Unusual layouts.** Posters, forms, slides saved as PDF and tables without column gutters can come out in a surprising order, or as paragraphs where you expected a table.
+
+## Used in production
+
+This is not a demo extracted for the sake of having something to open source. It is the engine
+inside [MindMax](https://mindmax.me/), a document workspace for macOS and Windows, and it has
+been through every PDF its users opened:
+
+- **[The online PDF to Markdown converter](https://mindmax.me/tools/pdf-to-markdown/)** runs this
+  library in the browser, unmodified, with the file never leaving the machine.
+- **[MindMax Read](https://mindmax.me/read/)** imports PDFs with the same text map, so a quote
+  highlighted in the app addresses the same character offset as the Markdown does.
+- **[The web editor](https://mindmax.me/write/)** opens the converted document for editing and
+  Word export.
+
+The product around it — OCR, the AI reading, annotations, the editor, the desktop app — is closed
+source and licensed separately. Apache-2.0 covers this engine and nothing above it. That boundary
+is stated here, on the project page, and in the app itself, because "open source" that turns out
+to mean one module of a paid product is worth knowing before you invest a weekend in it.
 
 ## Usage
 

@@ -3,12 +3,19 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>PDF → Markdown, in the browser</title>
+    <title>PDF → Markdown playground · @mindmax/pdf-markdown</title>
+    <meta
+      name="description"
+      content="Drop a PDF and see the Markdown this library produces. It runs in the page, nothing is uploaded, and the package comes from npm."
+    />
     <style>
-      body { font: 15px/1.6 system-ui, sans-serif; margin: 0; color: #1f2328; background: #fff; }
+      body { font: 15px/1.6 system-ui, -apple-system, sans-serif; margin: 0; color: #1f2328; background: #fff; }
       main { max-width: 900px; margin: 0 auto; padding: 40px 20px 80px; }
-      h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; }
-      p.lead { color: #57606a; margin: 0 0 24px; }
+      header { border-bottom: 1px solid #e5e8eb; padding-bottom: 18px; margin-bottom: 26px; }
+      h1 { font-size: 22px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em; }
+      p.lead { color: #57606a; margin: 0; max-width: 68ch; }
+      p.lead a, footer a { color: #0969da; text-decoration: none; }
+      p.lead a:hover, footer a:hover { text-decoration: underline; }
       #drop { border: 1px dashed #b9bfc7; border-radius: 10px; padding: 36px; text-align: center; color: #57606a; }
       #drop.over { border-color: #1a7f5a; background: #f2fbf6; }
       label { display: inline-block; margin-top: 10px; color: #0969da; cursor: pointer; text-decoration: underline; }
@@ -18,12 +25,21 @@
       .row { display: flex; gap: 12px; align-items: center; }
       button { font: inherit; padding: 6px 12px; border: 1px solid #d0d7de; background: #f6f8fa; border-radius: 6px; cursor: pointer; }
       button:disabled { opacity: .5; cursor: default; }
+      footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid #e5e8eb; color: #6e7781; font-size: 12.5px; }
     </style>
   </head>
   <body>
     <main>
-      <h1>PDF → Markdown, in the browser</h1>
-      <p class="lead">The file is read on this page. Nothing is uploaded. Build the package first: <code>pnpm build</code>.</p>
+      <header>
+        <h1>PDF → Markdown playground</h1>
+        <p class="lead">
+          Drop a PDF and see exactly what <code>@mindmax/pdf-markdown</code> produces — headings,
+          reading order, tables and links rebuilt, page headers and numbers removed. The file is
+          read in this page and is not uploaded.
+          <a href="https://mindmax.me/tools/pdf-to-markdown/">The full converter</a> puts the same
+          library behind an editor, with Word export.
+        </p>
+      </header>
 
       <div id="drop">
         <div>Drop a PDF here</div>
@@ -36,16 +52,26 @@
         <button id="copy" disabled>Copy Markdown</button>
       </div>
       <pre id="out" hidden></pre>
+
+      <footer>
+        Apache-2.0 ·
+        <a href="https://github.com/woodpeng/mindmax-pdf-markdown">source</a> ·
+        <a href="https://www.npmjs.com/package/@mindmax/pdf-markdown">npm</a> ·
+        text-layer PDFs only; a scan has nothing to read.
+      </footer>
     </main>
 
     <script type="module">
-      // pdf.js from a CDN so the example has no build step of its own; the
-      // library itself comes from the local dist/ produced by `pnpm build`.
+      // Both dependencies come from a CDN, so this page has no build step and no
+      // server: it loads the same module an `npm install` gives you.
+      // Pinned to the 0.1 line so patch releases land here without an edit.
       const PDFJS = 'https://cdn.jsdelivr.net/npm/pdfjs-dist@6.5.438';
+      const LIB = 'https://cdn.jsdelivr.net/npm/@mindmax/pdf-markdown@0.1/dist/index.js';
+
       const pdfjs = await import(`${PDFJS}/build/pdf.mjs`);
       pdfjs.GlobalWorkerOptions.workerSrc = `${PDFJS}/build/pdf.worker.mjs`;
 
-      const { convertPdfToMarkdown } = await import('../../dist/index.js');
+      const { convertPdfToMarkdown } = await import(LIB);
 
       const drop = document.getElementById('drop');
       const input = document.getElementById('file');

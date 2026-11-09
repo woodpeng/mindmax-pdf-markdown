@@ -10,7 +10,17 @@
 npm install @mindmax/pdf-markdown
 ```
 
-不装也能试：[在线转换器](https://mindmax.me/tools/pdf-to-markdown/) 在浏览器里跑的就是这个库，PDF 不会上传。
+不装也能试：[playground](https://woodpeng.github.io/mindmax-pdf-markdown/) 丢进 PDF 直接出 Markdown，周围什么都没有；[完整转换器](https://mindmax.me/tools/pdf-to-markdown/) 用的是同一个库，外面套了编辑器和 Word 导出。
+
+## 在生产里跑着
+
+这不是为了"有个开源项目"而抽出来的示例。它是 [MindMax](https://mindmax.me/) 里的引擎，用户打开过的每一份 PDF 都过过它：
+
+- **[在线 PDF 转 Markdown](https://mindmax.me/tools/pdf-to-markdown/)**：原样在浏览器里跑这个库，文件不出本机。
+- **[MindMax Read](https://mindmax.me/read/)**：导入 PDF 用同一份文本映射，所以在应用里高亮的引文，和在 Markdown 里是同一个字符偏移。
+- **[网页编辑器](https://mindmax.me/write/)**：转换结果在这里打开、编辑、导出 Word。
+
+外面的产品——OCR、AI 阅读、批注、编辑器、桌面版——闭源，单独授权。Apache-2.0 覆盖的是这个引擎，不含它上面的任何东西。这条线写在这里、写在项目页、也写在应用里，因为"开源"事后被理解为"付费产品的一个模块"时，人有权在投入一个周末之前就知道。
 
 ## 它解决什么
 

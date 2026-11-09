@@ -171,6 +171,7 @@ Two details that matter more than they look:
 
 - **170 unit tests**, 97% statement coverage.
 - **A 22-document regression corpus** with human-checked assertions: two-column papers, IEEE and Chinese journal layouts, tables, footnotes, a 1930s OCR'd NACA report, the US Constitution, a Chinese government gazette. Every document records its licence and sha256; the converted text is compared against a snapshot and against assertions in the same run.
+- **Per-document results** in [`eval/results.json`](eval/results.json) — pages, headings, tables, links, assertions and the defects still open, one row per document. It is the same JSON behind [the results table](https://mindmax.me/open-source/pdf-markdown/benchmark/), so the numbers there can be checked against this file.
 
 ```bash
 pnpm eval --fetch   # download the corpus (82 MB, sha256 checked)

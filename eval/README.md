@@ -23,6 +23,7 @@ has no such requirement.
 | `manifest.json` | yes | Per document: URL, sha256, licence, source, layout tags, `expect` / `todo` assertions |
 | `golden/<id>.md` | yes | Markdown snapshot — "what it looks like now", not "what it should look like" |
 | `golden/summary.json` | yes | Page count, canonical-text sha256 and length, heading/table/link counts |
+| `results.json` | yes | Generated per-document report — see [Sharing the results](#sharing-the-results) |
 | `ATTRIBUTION.md` | yes | Generated from the manifest: source, URL and licence per document |
 | `cache/` | no | Downloaded PDFs |
 | `out/` | no | This run's output; `out/text/` holds the full canonical text |
@@ -56,10 +57,35 @@ git diff --no-index -- eval/corpus/golden eval/corpus/out
 
 Write assertions a human can verify against the PDF in under a minute. "This heading exists" and "this running header must not appear" are good. "The output contains 4,182 words" is not.
 
+## Sharing the results
+
+`pnpm eval --report eval/results.json` also writes a machine-readable table: one entry per
+document with its counts, how many assertions it carries and pass, and the `todo` checks still
+failing. It is committed because a claim about coverage is only worth something if the reader can
+check it without running anything, and because a downstream page should not have to re-derive
+numbers from snapshots.
+
+```json
+{
+  "engine": { "package": "@mindmax/pdf-markdown", "version": "0.1.0", "canonicalTextVersion": "1" },
+  "totals": { "documents": 22, "pages": 612, "assertions": 120, "assertionsPassed": 120, "knownDefects": 17, "...": 0 },
+  "documents": [
+    { "id": "nist-sp800-63b", "pages": 80, "headings": 44, "tables": 19, "links": 69,
+      "assertions": { "total": 4, "passed": 4 },
+      "todos": { "checks": 5, "failing": ["not a heading: \"5.1.1 Memorized Secrets\""] } }
+  ]
+}
+```
+
+It carries **no timings**, so re-running the same engine version produces an identical file and the
+diff only moves when the output does. `--report` refuses a partial run (`--only`, or documents
+missing from the cache): a table that claims to describe the corpus and does not is worse than no
+table. Regenerate and commit it whenever a run changes the output.
+
 ## Adding a document
 
 1. It must pass the licence gate: CC BY, CC0, public domain, or an official document excluded from copyright. Nothing else goes in.
-2. Add an entry to `manifest.json` with `url`, `sha256` (`shasum -a 256 file.pdf`), `bytes`, `license`, `source`, `lang`, `layout`.
+2. Add an entry to `manifest.json` with `id`, `name` (a short English label), `url`, `sha256` (`shasum -a 256 file.pdf`), `bytes`, `license`, `source`, `lang`, `layout`. Add `nameLocal` when the document's own title is not in English.
 3. Start with the assertions you know are true today as `todo`, with a `note`; anything already passing goes in `expect`.
 4. `pnpm eval --fetch --update`, then `node scripts/gen-attribution.mjs`.
 5. Commit the manifest, the snapshot and the attribution together.

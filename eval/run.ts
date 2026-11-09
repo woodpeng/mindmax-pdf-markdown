@@ -5,6 +5,9 @@
  *   pnpm eval             compare output against snapshots and assertions
  *   pnpm eval --update    accept the current output as the new snapshot
  *   pnpm eval --only nist run only ids containing "nist"
+ *   pnpm eval --report eval/results.json
+ *                         also write a machine-readable per-document table
+ *                         (no timings, so re-runs produce an identical file)
  *
  * Three things are compared per document, and they answer different questions:
  *
@@ -30,7 +33,7 @@ import fs from 'node:fs/promises';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
-import { buildPdfTextMap, pdfTextLayerToMarkdown, readPdfTextLayer, type PdfMarkdownResult } from '../src/index.js';
+import { buildPdfTextMap, CANONICAL_TEXT_VERSION, pdfTextLayerToMarkdown, readPdfTextLayer, type PdfMarkdownResult } from '../src/index.js';
 
 interface Assertions {
   /** Overall verdict: normal / scanned / no text. */
@@ -57,6 +60,10 @@ interface Assertions {
 
 interface CorpusDoc {
   id: string;
+  /** Human-readable label, in English, for reports. */
+  name: string;
+  /** Title as published, when the document is not in English. */
+  nameLocal?: string;
   url: string;
   sha256: string;
   bytes: number;
@@ -81,6 +88,22 @@ interface Summary {
   mathPages: number;
   garbledPages: number;
 }
+
+/** One row of `--report` output: the numbers a reader can check against the PDF. */
+interface ReportDoc extends Omit<Summary, 'textSha256' | 'mdChars' | 'result'> {
+  id: string;
+  name: string;
+  nameLocal?: string;
+  lang: string;
+  license: string;
+  layout: string[];
+  url: string;
+  assertions: { total: number; passed: number };
+  /** Known defects: how many checks the `todo` block makes, and which still fail. */
+  todos: { checks: number; failing: string[] };
+}
+
+const pkg = createRequire(import.meta.url)('../package.json') as { name: string; version: string };
 
 const ROOT = path.join(path.dirname(fileURLToPath(import.meta.url)), 'corpus');
 const CACHE = path.join(ROOT, 'cache');
@@ -153,6 +176,17 @@ function checkAssertions(a: Assertions, summary: Summary, md: string): string[] 
   return failures;
 }
 
+/** How many checks an assertion block performs. Used only for reporting; the
+ *  failure messages are the contract. */
+function assertionCount(a: Assertions): number {
+  let n = a.result !== undefined ? 1 : 0;
+  n += (a.lines?.length ?? 0) + (a.headings?.length ?? 0) + (a.contains?.length ?? 0) + (a.absent?.length ?? 0);
+  for (const key of ['minHeadings', 'maxHeadings', 'minTables', 'maxTables', 'minLinks', 'mathFlagged', 'garbledFlagged'] as const) {
+    if (a[key] !== undefined) n++;
+  }
+  return n;
+}
+
 /** Line-level added/removed counts (multiset difference — an approximation of
  *  diff size; use `git diff --no-index` to read the actual change). */
 function lineDelta(before: string, after: string): { added: number; removed: number } {
@@ -185,6 +219,9 @@ async function main(): Promise<void> {
   const update = args.includes('--update');
   const onlyIdx = args.indexOf('--only');
   const only = onlyIdx >= 0 ? args[onlyIdx + 1] : undefined;
+  const reportIdx = args.indexOf('--report');
+  const reportPath = reportIdx >= 0 ? args[reportIdx + 1] : undefined;
+  const reportDocs: ReportDoc[] = [];
 
   const manifest = JSON.parse(await fs.readFile(path.join(ROOT, 'manifest.json'), 'utf8')) as { documents: CorpusDoc[] };
   const docs = manifest.documents.filter((d) => !only || d.id.includes(only));
@@ -285,6 +322,27 @@ async function main(): Promise<void> {
     const failures = doc.expect ? checkAssertions(doc.expect, summary, md) : [];
     regressions += failures.length ? 1 : 0;
     const todoFailures = doc.todo ? checkAssertions(doc.todo, summary, md) : [];
+    if (reportPath) {
+      const asserted = doc.expect ? assertionCount(doc.expect) : 0;
+      reportDocs.push({
+        id: doc.id,
+        name: doc.name,
+        ...(doc.nameLocal ? { nameLocal: doc.nameLocal } : {}),
+        lang: doc.lang,
+        license: doc.license,
+        layout: doc.layout,
+        url: doc.url,
+        pages: summary.pages,
+        textChars: summary.textChars,
+        headings: summary.headings,
+        tables: summary.tables,
+        links: summary.links,
+        mathPages: summary.mathPages,
+        garbledPages: summary.garbledPages,
+        assertions: { total: asserted, passed: asserted - failures.length },
+        todos: { checks: doc.todo ? assertionCount(doc.todo) : 0, failing: todoFailures },
+      });
+    }
     if (doc.todo) {
       if (todoFailures.length) todoOpen++;
       else promotable.push(doc.id);
@@ -313,6 +371,42 @@ async function main(): Promise<void> {
 
   console.log(`\nran ${ran}${missing ? `, ${missing} not cached` : ''} · ${regressions} assertion failures · ${changed} differ from snapshot${update ? ' (snapshots updated)' : ''} · ${todoOpen} open todos`);
   if (promotable.length) console.log(`todo now passes for: ${promotable.join(', ')} — move it into expect`);
+
+  if (reportPath) {
+    // A partial run would produce a table that claims to describe the corpus and
+    // does not. Refuse rather than publish something misleading.
+    if (only || ran !== docs.length) {
+      throw new Error('--report needs a full run over the cached corpus (no --only, every document present)');
+    }
+    const totals = reportDocs.reduce(
+      (t, d) => ({
+        documents: t.documents + 1,
+        pages: t.pages + d.pages,
+        headings: t.headings + d.headings,
+        tables: t.tables + d.tables,
+        links: t.links + d.links,
+        assertions: t.assertions + d.assertions.total,
+        assertionsPassed: t.assertionsPassed + d.assertions.passed,
+        knownDefects: t.knownDefects + d.todos.failing.length,
+        documentsWithOpenDefects: t.documentsWithOpenDefects + (d.todos.failing.length ? 1 : 0),
+      }),
+      {
+        documents: 0, pages: 0, headings: 0, tables: 0, links: 0,
+        assertions: 0, assertionsPassed: 0, knownDefects: 0, documentsWithOpenDefects: 0,
+      },
+    );
+    const report = {
+      $comment:
+        'Machine-readable results of the regression corpus: one entry per document with the counts a reader can check against the PDF. ' +
+        'Generated by `pnpm eval --report eval/results.json`; contains no timings, so a re-run on the same engine version produces the same file. ' +
+        'Assertions are human-checked facts about the output (see eval/README.md); they are not a structural-accuracy score.',
+      engine: { package: pkg.name, version: pkg.version, canonicalTextVersion: CANONICAL_TEXT_VERSION },
+      totals,
+      documents: reportDocs,
+    };
+    await fs.writeFile(reportPath, `${JSON.stringify(report, null, 2)}\n`);
+    console.log(`report: ${reportPath} (${totals.documents} documents, ${totals.assertionsPassed}/${totals.assertions} assertions, ${totals.knownDefects} open defects)`);
+  }
   if (changed && !update) console.log('Read the diff: git diff --no-index -- eval/corpus/golden eval/corpus/out (out/text/ holds the canonical text)');
   if (regressions || (changed && !update) || ran === 0) process.exitCode = 1;
 }

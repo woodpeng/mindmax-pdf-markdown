@@ -3,6 +3,7 @@
   "documents": [
     {
       "id": "arxiv-2201.11903-cot",
+      "name": "Chain-of-Thought Prompting Elicits Reasoning in LLMs",
       "url": "https://arxiv.org/pdf/2201.11903v1",
       "sha256": "3d40493ec4bcba922882db6e29e394eb9a2449721a5eb94f05e47aee7ad46752",
       "bytes": 1454242,
@@ -32,6 +33,7 @@
     },
     {
       "id": "arxiv-2312.00752-mamba",
+      "name": "Mamba: Linear-Time Sequence Modeling",
       "url": "https://arxiv.org/pdf/2312.00752v1",
       "sha256": "83044ebdd02276f922b6d0915a344f0c501fc7c214d1b88622c33971bb149199",
       "bytes": 1293868,
@@ -62,6 +64,7 @@
     },
     {
       "id": "arxiv-2310.06825-mistral",
+      "name": "Mistral 7B",
       "url": "https://arxiv.org/pdf/2310.06825v1",
       "sha256": "dfbac4e7035344b305c947481f2e7e8a02f7a24a563917eb6e47f6591d14c5ae",
       "bytes": 3749788,
@@ -92,6 +95,7 @@
     },
     {
       "id": "arxiv-2302.13971-llama",
+      "name": "LLaMA: Open and Efficient Foundation Language Models",
       "url": "https://arxiv.org/pdf/2302.13971v1",
       "sha256": "2e663675ae36ad12adb2f5a05281bac2747ecf8d23d92bedd9f937a89fee7136",
       "bytes": 726566,
@@ -129,6 +133,7 @@
     },
     {
       "id": "arxiv-2212.08073-constitutional-ai",
+      "name": "Constitutional AI: Harmlessness from AI Feedback",
       "url": "https://arxiv.org/pdf/2212.08073v1",
       "sha256": "9a456a07ad346e3372f9867d346f69f5b0f68b4c65f060aca0b8a13fa9d98e83",
       "bytes": 2088111,
@@ -153,6 +158,7 @@
     },
     {
       "id": "arxiv-2404.14219-phi3",
+      "name": "Phi-3 Technical Report",
       "url": "https://arxiv.org/pdf/2404.14219v1",
       "sha256": "54fe7b2ddc32ff3de643ca2384e0ceab39214d97191248375d6063c362350106",
       "bytes": 2049157,
@@ -176,6 +182,7 @@
     },
     {
       "id": "arxiv-2610.40388-wide-binaries",
+      "name": "3D modelling of orbits in wide binary gravity tests",
       "url": "https://arxiv.org/pdf/2610.40388v2",
       "sha256": "ad1090bbd570be9173b81038450343e08bf1a1caf24084f275d2cad853d0624e",
       "bytes": 4793740,
@@ -214,6 +221,7 @@
     },
     {
       "id": "arxiv-2610.37889-magnetization",
+      "name": "GæniceN: relaxing magnetization states self-consistently",
       "url": "https://arxiv.org/pdf/2610.37889v1",
       "sha256": "a57bde321ff99c4b9454e1cd5499b85d4948130dcd843b3ada48824540beaf53",
       "bytes": 734943,
@@ -239,6 +247,7 @@
     },
     {
       "id": "arxiv-2611.04027-ieee-ral",
+      "name": "Causal framework for autonomous mobile robots",
       "url": "https://arxiv.org/pdf/2611.04027v1",
       "sha256": "3db1e67e62b16466fe4b2450132427e30f3a5d2ed31d7e69f63a4c682f8e3afd",
       "bytes": 7354794,
@@ -262,6 +271,7 @@
     },
     {
       "id": "arxiv-2611.06195-detection",
+      "name": "Annotator-free object detection",
       "url": "https://arxiv.org/pdf/2611.06195v1",
       "sha256": "213d51094012845dfad7d5bdfef53c5db0fc17e93092d8ae60aa13896a2fff96",
       "bytes": 10532418,
@@ -286,6 +296,7 @@
     },
     {
       "id": "arxiv-2611.00717-random-walk",
+      "name": "Cutoff for simple random walk on preferential attachment graphs",
       "url": "https://arxiv.org/pdf/2611.00717v1",
       "sha256": "bda8e5e57e1cfc63a159b31fd0d6815b8978f0a6d3dfcb11d670e222bad6b50c",
       "bytes": 843842,
@@ -313,6 +324,7 @@
     },
     {
       "id": "arxiv-2609.17200-ai-complexity",
+      "name": "Mapping AI economic complexity",
       "url": "https://arxiv.org/pdf/2609.17200v1",
       "sha256": "8663e85a50f0a52328bb796040a68c308a28bdf73dc2b49be58059b75669de20",
       "bytes": 314784,
@@ -336,6 +348,7 @@
     },
     {
       "id": "arxiv-2610.39699-ota",
+      "name": "Mismatch-tolerant high-gain OTA",
       "url": "https://arxiv.org/pdf/2610.39699v1",
       "sha256": "72f7fdc5a47054ba25867a842af9c77b4d9387838d48d6c6568bf29a7d02b363",
       "bytes": 6499029,
@@ -367,6 +380,7 @@
     },
     {
       "id": "arxiv-2609.36736-speech-bci",
+      "name": "Speech brain-computer interfaces (review)",
       "url": "https://arxiv.org/pdf/2609.36736v1",
       "sha256": "1d4d182d17ece0b6acdf42a9c40fce9e626ccd9ea34cc580a87302bea280db4f",
       "bytes": 13334828,
@@ -391,6 +405,7 @@
     },
     {
       "id": "arxiv-2608.29558-math-fonts",
+      "name": "Luo's spectral large sieve inequality",
       "url": "https://arxiv.org/pdf/2608.29558v2",
       "sha256": "9e058b78b9d3c103dabeb745f0b26858495191955836c9efcae43d298f17dcb4",
       "bytes": 379062,
@@ -422,6 +437,8 @@
     },
     {
       "id": "arxiv-2609.27618-bilingual",
+      "name": "Bilingual manuscript: English then Chinese",
+      "nameLocal": "中英双语稿：英文全文在前，中文原文在后",
       "url": "https://arxiv.org/pdf/2609.27618v1",
       "sha256": "b80f2c268e25741e99615211607296aa1d4b797ea1a2a95b55ab995ec08f7f07",
       "bytes": 3728086,
@@ -457,6 +474,7 @@
     },
     {
       "id": "nist-sp800-63b",
+      "name": "NIST SP 800-63B, Digital Identity Guidelines",
       "url": "https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-63b.pdf",
       "sha256": "ccfce7510a1267933f912d023306c6e7d485f21be63d271108b61aad6139127e",
       "bytes": 1480377,
@@ -490,6 +508,7 @@
     },
     {
       "id": "us-constitution",
+      "name": "The Constitution of the United States",
       "url": "https://www.govinfo.gov/content/pkg/CDOC-110hdoc50/pdf/CDOC-110hdoc50.pdf",
       "sha256": "7f29c4a79e310cc7bcee5f3fd07fb1367e463bd4530fa5d854ebdd4fd4402e57",
       "bytes": 4020598,
@@ -518,6 +537,7 @@
     },
     {
       "id": "federal-register-2023-28802",
+      "name": "Federal Register: Airworthiness Directives (Airbus)",
       "url": "https://www.govinfo.gov/content/pkg/FR-2024-01-02/pdf/2023-28802.pdf",
       "sha256": "711b49cb298cce78e768795b8ee87100cc7d237dd52ff982959498fc527f1808",
       "bytes": 256754,
@@ -542,6 +562,7 @@
     },
     {
       "id": "usgs-fs-2018-3025",
+      "name": "USGS Fact Sheet 2018-3025",
       "url": "https://pubs.usgs.gov/fs/2018/3025/fs20183025.pdf",
       "sha256": "b4687ef7db2f88eef575b57acc3e2f6e396d11d7b13bd240a3d11e7fd91c75d7",
       "bytes": 1317167,
@@ -570,6 +591,7 @@
     },
     {
       "id": "naca-19930091690-ocr-scan",
+      "name": "NACA Report 614 (scanned, OCR text layer)",
       "url": "https://ntrs.nasa.gov/api/citations/19930091690/downloads/19930091690.pdf",
       "sha256": "150601e334786c9e803accc1da1187a7ce291310f7ae7536be7ff0a2100bbbad",
       "bytes": 10466465,
@@ -593,6 +615,8 @@
     },
     {
       "id": "gov-cn-gazette-2025-35",
+      "name": "State Council Gazette of China, 2025 No. 35",
+      "nameLocal": "中华人民共和国国务院公报 2025 年第 35 号",
       "url": "https://www.gov.cn/gongbao/2025/issue_12466/material/gwygb202535.pdf",
       "sha256": "74d0cf48024f16f392f9af8f3b1bd1dce0fa424f44d4a4441abb8d4bd42c159c",
       "bytes": 8001863,

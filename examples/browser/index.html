@@ -26,6 +26,10 @@
       button { font: inherit; padding: 6px 12px; border: 1px solid #d0d7de; background: #f6f8fa; border-radius: 6px; cursor: pointer; }
       button:disabled { opacity: .5; cursor: default; }
       footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid #e5e8eb; color: #6e7781; font-size: 12.5px; }
+      .apps { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+      .app-pill { display: inline-flex; align-items: center; gap: 5px; padding: 3px 11px; border: 1px solid #d8dee4; border-radius: 999px; color: #57606a; text-decoration: none; font-size: 12.5px; background: #fff; }
+      .app-pill:hover { background: #f6f8fa; color: #0969da; text-decoration: none; }
+      .app-pill strong { color: #0969da; font-weight: 600; }
     </style>
   </head>
   <body>
@@ -50,8 +54,13 @@
       <div id="status"></div>
       <div class="row">
         <button id="copy" disabled>Copy Markdown</button>
+        <button id="edit" disabled>Open in MindMax Write</button>
       </div>
       <pre id="out" hidden></pre>
+      <div class="apps" id="apps" hidden>
+        <a class="app-pill" href="https://mindmax.me/read/?utm_source=mindmax_pdf_playground&utm_medium=referral&utm_campaign=mindmax_trial&lang=en" target="_blank" rel="noopener"><strong>MindMax Read</strong> — read &amp; annotate</a>
+        <a class="app-pill" href="https://mindmax.me/write/?utm_source=mindmax_pdf_playground&utm_medium=referral&utm_campaign=mindmax_trial&lang=en" target="_blank" rel="noopener"><strong>MindMax Write</strong> — full editor</a>
+      </div>
 
       <footer>
         Apache-2.0 ·
@@ -78,11 +87,17 @@
       const status = document.getElementById('status');
       const out = document.getElementById('out');
       const copy = document.getElementById('copy');
+      const edit = document.getElementById('edit');
+      const apps = document.getElementById('apps');
+      let currentFileName = '';
 
       async function convert(file) {
         status.textContent = 'Reading…';
+        currentFileName = file.name || '';
         out.hidden = true;
+        apps.hidden = true;
         copy.disabled = true;
+        edit.disabled = true;
         const doc = await pdfjs.getDocument({
           data: new Uint8Array(await file.arrayBuffer()),
           cMapUrl: `${PDFJS}/cmaps/`,
@@ -99,7 +114,9 @@
           }
           out.textContent = result.markdown;
           out.hidden = false;
+          apps.hidden = false;
           copy.disabled = false;
+          edit.disabled = false;
           const issues = result.textLayerIssues;
           status.textContent = `${file.name} · ${result.pageCount} pages · ${result.links} links` +
             (issues ? ` · ${issues.mathPages} pages with maths, ${issues.garbledPages} garbled` : '');
@@ -126,6 +143,135 @@
         await navigator.clipboard.writeText(out.textContent ?? '');
         copy.textContent = 'Copied';
         setTimeout(() => { copy.textContent = 'Copy Markdown'; }, 1500);
+      });
+
+      // -----------------------------------------------------------------------
+      // "Continue Edit" → open the converted Markdown in MindMax Write.
+      //
+      // Mirrors the handoff used by wise-card's text tool (src/utils/mindmaxLinks.js):
+      // /write is a local-first editor that ignores query params, so the body is
+      // passed in the URL fragment as #import=v1.<base64url(deflate-raw(JSON))>,
+      // where JSON = {"m": "<markdown>", "t": "<title>"}. The fragment is never
+      // sent to the server; it is unpacked in the browser and written to IndexedDB.
+      // Format is compatible with mindmax packages/core/src/write-handoff/index.ts.
+      // -----------------------------------------------------------------------
+      const WRITE_HANDOFF_MAX_URL_CHARS = 32000;
+      const WRITE_HANDOFF_MAX_MARKDOWN_CHARS = 2000000;
+
+      const toBase64Url = (bytes) => {
+        let binary = '';
+        const CHUNK = 0x8000;
+        for (let i = 0; i < bytes.length; i += CHUNK) {
+          binary += String.fromCharCode(...bytes.subarray(i, i + CHUNK));
+        }
+        return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      };
+
+      // Raw-DEFLATE "stored block" fallback (RFC 1951 §3.2.3) for browsers without
+      // CompressionStream('deflate-raw'); the decoder still accepts it.
+      const deflateRawStored = (bytes) => {
+        const MAX_BLOCK = 0xffff;
+        const blocks = [];
+        let total = 0;
+        for (let offset = 0; offset < bytes.length; offset += MAX_BLOCK) {
+          const part = bytes.subarray(offset, Math.min(offset + MAX_BLOCK, bytes.length));
+          const isFinal = offset + MAX_BLOCK >= bytes.length ? 1 : 0;
+          const len = part.length;
+          const nlen = ~len & 0xffff;
+          const block = new Uint8Array(5 + len);
+          block[0] = isFinal; // BFINAL + BTYPE=00 (stored)
+          block[1] = len & 0xff;
+          block[2] = (len >> 8) & 0xff;
+          block[3] = nlen & 0xff;
+          block[4] = (nlen >> 8) & 0xff;
+          block.set(part, 5);
+          blocks.push(block);
+          total += block.length;
+        }
+        const out = new Uint8Array(total);
+        let cursor = 0;
+        for (const block of blocks) { out.set(block, cursor); cursor += block.length; }
+        return out;
+      };
+
+      const deflateRaw = async (bytes) => {
+        if (typeof CompressionStream !== 'undefined') {
+          try {
+            const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate-raw'));
+            const reader = stream.getReader();
+            const chunks = [];
+            let size = 0;
+            for (;;) {
+              const { done, value } = await reader.read();
+              if (done) break;
+              chunks.push(value);
+              size += value.byteLength;
+            }
+            const out = new Uint8Array(size);
+            let cursor = 0;
+            for (const chunk of chunks) { out.set(chunk, cursor); cursor += chunk.byteLength; }
+            return out;
+          } catch (error) {
+            // fall through to stored-block fallback
+          }
+        }
+        return deflateRawStored(bytes);
+      };
+
+      const buildWriteHandoffUrl = async (markdown, title) => {
+        const md = String(markdown || '');
+        if (!md.trim() || md.length > WRITE_HANDOFF_MAX_MARKDOWN_CHARS) return null;
+        const t = String(title || '').trim().slice(0, 200);
+        const payload = t ? { m: md, t } : { m: md };
+        let url;
+        try {
+          const compressed = await deflateRaw(new TextEncoder().encode(JSON.stringify(payload)));
+          const base = 'https://mindmax.me/write/?utm_source=mindmax_pdf_playground'
+            + '&utm_medium=playground&utm_campaign=mindmax_trial&lang=en';
+          url = `${base}#import=v1.${toBase64Url(compressed)}`;
+        } catch (error) {
+          return null;
+        }
+        return url.length <= WRITE_HANDOFF_MAX_URL_CHARS ? url : null;
+      };
+
+      const WRITE_URL = 'https://mindmax.me/write/?utm_source=mindmax_pdf_playground'
+        + '&utm_medium=playground&utm_campaign=mindmax_trial&lang=en';
+
+      edit.addEventListener('click', async () => {
+        const content = out.textContent ?? '';
+        if (!content.trim()) return;
+        // Derive a document title from the PDF filename (drop the .pdf extension).
+        const title = currentFileName ? currentFileName.replace(/\.pdf$/i, '') : 'PDF → Markdown';
+        // Open a blank tab first to preserve the click gesture (avoids popup blockers),
+        // then fill it once the async encoding finishes.
+        const writeTab = window.open('', '_blank');
+        let writeUrl = null;
+        try {
+          writeUrl = await buildWriteHandoffUrl(content, title);
+        } catch (error) {
+          writeUrl = null;
+        }
+
+        if (writeUrl) {
+          if (writeTab) { writeTab.location.href = writeUrl; }
+          else { window.open(writeUrl, '_blank'); }
+          return;
+        }
+
+        // Fallback when the body is empty, too large (>32k URL), or encoding fails:
+        // copy to clipboard and open /write so the user can paste. Never truncate.
+        if (writeTab) { try { writeTab.close(); } catch (error) { /* ignore */ } }
+        let copiedOk = false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(content);
+            copiedOk = true;
+          }
+        } catch (error) { copiedOk = false; }
+        edit.textContent = copiedOk ? 'Copied — paste in MindMax Write' : 'Paste in MindMax Write';
+        setTimeout(() => { edit.textContent = 'Open in MindMax Write'; }, 2000);
+        window.open(WRITE_URL, '_blank');
       });
     </script>
   </body>

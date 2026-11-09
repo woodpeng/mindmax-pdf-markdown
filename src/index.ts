@@ -96,6 +96,11 @@ export type { PdfArtifactPageLike, PdfTaggedProbePageLike } from './artifacts.js
 export { detectTables } from './table.js';
 export type { TableBlock, TableItemLike } from './table.js';
 
+/** Depth for a flat table of contents, inferred from its numbering
+ *  (第X部/第X章/第X节, Chapter N, 1.2.3). Used by the PDF heuristic; exported
+ *  because the same inference is useful on EPUB NCX and other flat TOCs. */
+export { inferTocDepth } from './toc-depth.js';
+
 /**
  * Bumped whenever `buildPdfTextMap().text` changes for the same input.
  *

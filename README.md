@@ -120,6 +120,7 @@ const result = pdfTextLayerToMarkdown(layer, map);
 | `buildPdfTextMap(pages)` | The structural core: canonical text plus page/item ranges |
 | `assessPdfTextLayer(pageItems)` | Health check: maths pages, garbled pages — or `null` |
 | `resolvePdfOutlineAuto(doc, styledPages)` | Outline from bookmarks, then tagged structure, then type size |
+| `inferTocDepth(labels)` | Depth for a flat table of contents, inferred from its numbering |
 | `detectTables(items)` | Table detection over one page's geometry |
 | `CANONICAL_TEXT_VERSION` | Bumped when `buildPdfTextMap().text` changes for the same input |
 

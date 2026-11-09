@@ -25,6 +25,7 @@ describe('public API', () => {
       'detectTables',
       'insertPdfPageMarkers',
       'pageNumberAtOffset',
+      'inferTocDepth',
     ]) {
       expect(typeof (api as Record<string, unknown>)[name]).toBe('function');
     }

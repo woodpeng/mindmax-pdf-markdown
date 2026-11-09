@@ -12,7 +12,9 @@ pnpm eval --update           # accept current output as the new snapshot
 pnpm eval --only nist        # only documents whose id contains "nist"
 ```
 
-The whole set runs in about 15 seconds once cached.
+The whole set runs in about 15 seconds once cached. The runner needs **Node 22+** —
+`pdfjs-dist` 6 uses `Promise.withResolvers`, which Node 20 lacks. The library itself
+has no such requirement.
 
 ## What is in the repository
 

@@ -84,7 +84,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node: [20, 22]
+        # Node 22 only: pdfjs-dist 6 uses Promise.withResolvers, which Node 20
+        # does not have. The library itself still runs on 18+; this job is dev
+        # tooling (it drives pdf.js to produce the text layer).
+        node: [22]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4

@@ -155,7 +155,11 @@
       // sent to the server; it is unpacked in the browser and written to IndexedDB.
       // Format is compatible with mindmax packages/core/src/write-handoff/index.ts.
       // -----------------------------------------------------------------------
-      const WRITE_HANDOFF_MAX_URL_CHARS = 32000;
+      // Fragments are never sent to the server, so the only real constraint is what
+      // the browser accepts in a URL. Safari caps the address bar at ~64 KB, so we
+      // stay safely under that. The live /write decoder accepts up to 2,000,000
+      // markdown chars, so this cap only ever trips on genuinely huge documents.
+      const WRITE_HANDOFF_MAX_URL_CHARS = 60000;
       const WRITE_HANDOFF_MAX_MARKDOWN_CHARS = 2000000;
 
       const toBase64Url = (bytes) => {
@@ -259,7 +263,7 @@
           return;
         }
 
-        // Fallback when the body is empty, too large (>32k URL), or encoding fails:
+        // Fallback when the body is empty, too large for a URL, or encoding fails:
         // copy to clipboard and open /write so the user can paste. Never truncate.
         if (writeTab) { try { writeTab.close(); } catch (error) { /* ignore */ } }
         let copiedOk = false;
@@ -269,8 +273,11 @@
             copiedOk = true;
           }
         } catch (error) { copiedOk = false; }
-        edit.textContent = copiedOk ? 'Copied — paste in MindMax Write' : 'Paste in MindMax Write';
-        setTimeout(() => { edit.textContent = 'Open in MindMax Write'; }, 2000);
+        status.textContent = copiedOk
+          ? 'Text copied — open MindMax Write and press ⌘V / Ctrl+V to paste it.'
+          : 'Could not auto-open. Open MindMax Write and paste the copied text.';
+        edit.textContent = copiedOk ? 'Copied — paste in Write' : 'Paste in Write';
+        setTimeout(() => { edit.textContent = 'Open in MindMax Write'; }, 3000);
         window.open(WRITE_URL, '_blank');
       });
     </script>

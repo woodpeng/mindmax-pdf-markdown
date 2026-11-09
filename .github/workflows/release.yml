@@ -30,6 +30,10 @@ jobs:
           cache: pnpm
           registry-url: https://registry.npmjs.org
 
+      # The npm bundled with Node 22 (10.x) predates OIDC trusted publishing.
+      - name: Use npm with trusted-publishing support
+        run: npm install -g npm@^11.5.1
+
       - run: pnpm install --frozen-lockfile
       - run: pnpm typecheck
       - run: pnpm test
@@ -48,7 +52,19 @@ jobs:
             exit 1
           fi
 
-      - run: npm publish --provenance --access public
+      # Succeeds on re-runs and on tags whose version was published by hand:
+      # npm has no "publish if absent" verb, so ask the registry first.
+      - name: Publish to npm
+        id: publish
+        run: |
+          version="$(node -p "require('./package.json').version")"
+          if npm view "@mindmax/pdf-markdown@$version" version >/dev/null 2>&1; then
+            echo "::notice::$version is already on npm — skipping publish, keeping this run idempotent"
+            echo "published=false" >> "$GITHUB_OUTPUT"
+          else
+            npm publish --access public
+            echo "published=true" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Create GitHub release
         run: gh release create "$GITHUB_REF_NAME" --title "$GITHUB_REF_NAME" --generate-notes

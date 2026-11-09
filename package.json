@@ -60,7 +60,7 @@
     "attribution": "node scripts/gen-attribution.mjs",
     "check:size": "node scripts/check-size.mjs",
     "check:pkg": "publint && attw --pack .",
-    "prepublishOnly": "pnpm build"
+    "prepublishOnly": "npm run build"
   },
   "devDependencies": {
     "@arethetypeswrong/cli": "^0.18.2",
